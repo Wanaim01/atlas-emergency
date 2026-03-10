@@ -55,7 +55,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),

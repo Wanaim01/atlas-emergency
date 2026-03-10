@@ -7,7 +7,7 @@ import 'core/screens/role_selection_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppProvider()..initialize(),
@@ -94,11 +94,9 @@ class AtlasApp extends StatelessWidget {
         primary: Color(0xFF0F766E),
         secondary: Color(0xFFDC2626),
         surface: Colors.white,
-        background: Color(0xFFF8FAFC),
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: Color(0xFF0F172A),
-        onBackground: Color(0xFF0F172A),
       ),
       scaffoldBackgroundColor: const Color(0xFFF8FAFC),
       textTheme: const TextTheme(
@@ -128,7 +126,8 @@ class AtlasApp extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           elevation: 0,
           minimumSize: const Size(double.infinity, 56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -153,14 +152,14 @@ class AtlasApp extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xFF0F766E), width: 2),
         ),
       ),
-     cardTheme: const CardThemeData(
-  elevation: 0,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(20)),
-    side: BorderSide(color: Color(0xFFE2E8F0)),
-  ),
-  color: Colors.white,
-),
+      cardTheme: const CardThemeData(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          side: BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        color: Colors.white,
+      ),
     );
   }
 
@@ -172,11 +171,9 @@ class AtlasApp extends StatelessWidget {
         primary: Color(0xFF14B8A6),
         secondary: Color(0xFFEF4444),
         surface: Color(0xFF1E293B),
-        background: Color(0xFF0F172A),
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: Color(0xFFF8FAFC),
-        onBackground: Color(0xFFF8FAFC),
       ),
       scaffoldBackgroundColor: const Color(0xFF0F172A),
       textTheme: const TextTheme(
@@ -206,7 +203,8 @@ class AtlasApp extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           elevation: 0,
           minimumSize: const Size(double.infinity, 56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -225,14 +223,14 @@ class AtlasApp extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xFF14B8A6), width: 2),
         ),
       ),
-     cardTheme: const CardThemeData(
-  elevation: 0,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(20)),
-    side: BorderSide(color: Color(0xFFE2E8F0)),
-  ),
-  color: Colors.white,
-),
+      cardTheme: const CardThemeData(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          side: BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        color: Colors.white,
+      ),
     );
   }
 }

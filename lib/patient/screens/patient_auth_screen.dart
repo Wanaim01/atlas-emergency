@@ -89,12 +89,12 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
                             letterSpacing: 2,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'PATIENT',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC2626),
+                            color: Color(0xFFDC2626),
                             letterSpacing: 3,
                           ),
                         ),
