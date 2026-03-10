@@ -102,6 +102,17 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     });
   }
 
+  void _logout() {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('You have been logged out'),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+      ),
+    );
+  }
+
   void _showHospitalDetails(Hospital hospital) {
     setState(() {
       _selectedHospital = hospital;
@@ -183,20 +194,85 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              // Header with Profile and Online Toggle
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: DriverProfileCard(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colorScheme.primary,
+                        colorScheme.primaryContainer,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    const SizedBox(width: 12),
-                    _OnlineToggle(
-                      isOnline: _isOnline,
-                      onToggle: _toggleOnlineStatus,
-                    ),
-                  ],
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withOpacity(0.35),
+                        blurRadius: 25,
+                        offset: const Offset(0, 12),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Driver Central',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'Live dispatch dashboard',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          TextButton.icon(
+                            onPressed: _logout,
+                            icon: const Icon(Icons.logout, color: Colors.white),
+                            label: const Text('Logout'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.black26,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: DriverProfileCard(),
+                          ),
+                          const SizedBox(width: 12),
+                          _OnlineToggle(
+                            isOnline: _isOnline,
+                            onToggle: _toggleOnlineStatus,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

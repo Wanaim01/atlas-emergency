@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -21,9 +23,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final provider = context.watch<AppProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isArabic = provider.isArabic;
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final roles = [
       _RoleData(
@@ -31,7 +33,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         subtitle: l10n.patientSubtitle,
         icon: Icons.emergency_outlined,
         color: isDark ? const Color(0xFFEF4444) : const Color(0xFFDC2626),
-        lightGradient: const [Color(0xFFFEE2E2), Color(0xFFFECACA)],
+        lightGradient: const [Color(0xFFfee2e2), Color(0xFFfecaca)],
         darkGradient: const [Color(0xFF7F1D1D), Color(0xFF991B1B)],
       ),
       _RoleData(
@@ -52,263 +54,94 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       ),
     ];
 
+    final backgroundGradient = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.white,
+        Colors.white,
+        Colors.white,
+      ],
+    );
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        backgroundColor: colorScheme.surface,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top Bar with Logo and Settings
-                Row(
-                  children: [
-                    // Logo
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: isDark 
-                            ? [colorScheme.primary, colorScheme.primary.withOpacity(0.8)]
-                            : [const Color(0xFF0F766E), const Color(0xFF115E59)],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.health_and_safety,
-                        color: colorScheme.onPrimary,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ATLAS',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: colorScheme.onSurface,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        Text(
-                          'EMERGENCY',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: colorScheme.primary,
-                            letterSpacing: 3,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    // Settings Button
-                    _IconButton(
-                      icon: Icons.settings_outlined,
-                      onTap: () => _showSettings(context),
-                      isDark: isDark,
-                    ),
-                    const SizedBox(width: 8),
-                    // Language Toggle
-                    _IconButton(
-                      icon: Icons.language,
-                      onTap: () => provider.toggleLanguage(),
-                      label: provider.languageCode.toUpperCase(),
-                      isDark: isDark,
-                    ),
-                  ],
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(decoration: BoxDecoration(gradient: backgroundGradient)),
+            ),
+            Positioned(
+              top: -100,
+              right: -60,
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const RadialGradient(
+                    colors: [Colors.white70, Colors.transparent],
+                  ),
                 ),
-
-                const SizedBox(height: 40),
-
-                const SizedBox(height: 32),
-
-                // Role Cards
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: roles.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) {
-                      final role = roles[index];
-                      final isSelected = selectedIndex == index;
-                      final gradient = isDark ? role.darkGradient : role.lightGradient;
-
-                      return TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 1.0, end: isSelected ? 0.98 : 1.0),
-                        duration: const Duration(milliseconds: 200),
-                        builder: (context, scale, child) {
-                          return Transform.scale(
-                            scale: scale,
-                            child: GestureDetector(
-                              onTapDown: (_) => setState(() => selectedIndex = index),
-                              onTapUp: (_) => setState(() => selectedIndex = null),
-                              onTapCancel: () => setState(() => selectedIndex = null),
-                              onTap: () => _navigateToRole(context, index),
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.surface,
-                                  borderRadius: BorderRadius.circular(24),
-                                  border: Border.all(
-                                    color: isSelected 
-                                      ? role.color 
-                                      : colorScheme.outline.withOpacity(0.5),
-                                    width: isSelected ? 2 : 1,
-                                  ),
-                                  boxShadow: isSelected ? [
-                                    BoxShadow(
-                                      color: role.color.withOpacity(0.2),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ] : isDark ? [] : [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.03),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 64,
-                                      height: 64,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: gradient,
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Icon(
-                                        role.icon,
-                                        color: role.color,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            role.title,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: colorScheme.onSurface,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            role.subtitle,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: colorScheme.onSurfaceVariant,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 48,
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        color: role.color.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Icon(
-                                        isArabic ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
-                                        color: role.color,
-                                        size: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+              ),
+            ),
+            Positioned(
+              bottom: -140,
+              left: -80,
+              child: Container(
+                width: 260,
+                height: 260,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const RadialGradient(
+                    colors: [Colors.white60, Colors.transparent],
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _HeaderBar(
+                      isArabic: isArabic,
+                      provider: provider,
+                      onSettingsTap: () => _showSettings(context),
+                    ),
+                    const SizedBox(height: 28),
+                    Expanded(
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: roles.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 16),
+                        itemBuilder: (context, index) {
+                          final role = roles[index];
+                          final isSelected = selectedIndex == index;
+                          return _RoleCard(
+                            role: role,
+                            isSelected: isSelected,
+                            isArabic: isArabic,
+                            onTap: () {
+                              setState(() => selectedIndex = index);
+                              _navigateToRole(context, index);
+                            },
+                            onHighlightChanged: (pressed) {
+                              setState(() => selectedIndex = pressed ? index : null);
+                            },
                           );
                         },
-                      );
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Emergency Button
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFDC2626), Color(0xFFB91C1C)],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFDC2626).withOpacity(0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _showEmergencyDialog(context),
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        width: double.infinity,
-                        height: 64,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.emergency,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Text(
-                              l10n.emergencyCall,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    _EmergencyButton(onTap: () => _showEmergencyDialog(context)),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -320,7 +153,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       const DriverAuthScreen(),
       const HospitalAuthScreen(),
     ];
-    
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => screens[index]),
@@ -330,7 +163,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   void _showEmergencyDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -363,9 +196,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             child: Text(l10n.cancel),
           ),
           FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFDC2626),
             ),
@@ -404,50 +235,298 @@ class _RoleData {
   });
 }
 
-class _IconButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final String? label;
-  final bool isDark;
+class _HeaderBar extends StatelessWidget {
+  final bool isArabic;
+  final AppProvider provider;
+  final VoidCallback onSettingsTap;
 
-  const _IconButton({
-    required this.icon,
-    required this.onTap,
-    this.label,
-    required this.isDark,
+  const _HeaderBar({
+    required this.isArabic,
+    required this.provider,
+    required this.onSettingsTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isDark ? colorScheme.surface : colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: colorScheme.outline.withOpacity(0.5),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 20, color: colorScheme.onSurface),
-            if (label != null) ...[
-              const SizedBox(width: 4),
-              Text(
-                label!,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
-                ),
+
+    return Row(
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.primary.withOpacity(0.95),
+                colorScheme.primaryContainer.withOpacity(0.8),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withOpacity(0.25),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
             ],
+          ),
+          child: Icon(
+            Icons.health_and_safety,
+            color: colorScheme.onPrimary,
+            size: 28,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'ATLAS',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              'EMERGENCY',
+              style: TextStyle(
+                fontSize: 10,
+                letterSpacing: 2,
+                fontWeight: FontWeight.w500,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
+        ),
+        const Spacer(),
+        _IconButton(
+          icon: Icons.settings_outlined,
+          onTap: onSettingsTap,
+        ),
+        const SizedBox(width: 12),
+        _IconButton(
+          icon: Icons.language,
+          onTap: () => provider.toggleLanguage(),
+          label: provider.languageCode.toUpperCase(),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoleCard extends StatelessWidget {
+  final _RoleData role;
+  final bool isSelected;
+  final bool isArabic;
+  final VoidCallback onTap;
+  final ValueChanged<bool>? onHighlightChanged;
+
+  const _RoleCard({
+    required this.role,
+    required this.isSelected,
+    required this.isArabic,
+    required this.onTap,
+    this.onHighlightChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final gradient = isSelected ? role.darkGradient : role.lightGradient;
+    final baseColor = isSelected ? role.color.withOpacity(0.85) : Colors.white.withOpacity(0.15);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: gradient,
+            ),
+            border: Border.all(
+              color: isSelected ? role.color : Colors.white.withOpacity(0.2),
+              width: isSelected ? 2.2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: baseColor.withOpacity(isSelected ? 0.35 : 0.25),
+                blurRadius: isSelected ? 30 : 18,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: onTap,
+              onHighlightChanged: onHighlightChanged,
+              borderRadius: BorderRadius.circular(24),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 58,
+                      height: 58,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: gradient,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Icon(role.icon, color: Colors.white, size: 28),
+                    ),
+                    const SizedBox(width: 18),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            role.title,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.onBackground,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            role.subtitle,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: colorScheme.onBackground.withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      isArabic ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmergencyButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _EmergencyButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFDC2626), Color(0xFFB91C1C)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFDC2626).withOpacity(0.4),
+            blurRadius: 18,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.emergency, color: Colors.white, size: 26),
+                const SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.emergencyCall,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _IconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? label;
+
+  const _IconButton({
+    required this.icon,
+    required this.onTap,
+    this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Material(
+      color: colorScheme.surface.withOpacity(0.7),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20, color: colorScheme.onSurface),
+              if (label != null) ...[
+                const SizedBox(width: 6),
+                Text(
+                  label!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
