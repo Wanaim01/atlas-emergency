@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/widgets/auth_scaffold.dart';
 import '../../core/widgets/auth_text_field.dart';
+import '../../driver/screens/driver_dashboard_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class DriverAuthScreen extends StatefulWidget {
   const DriverAuthScreen({super.key});
@@ -34,14 +36,17 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: isLogin ? const Color(0xFF059669) : Colors.transparent,
+                        color: isLogin
+                            ? const Color(0xFF059669)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         'Sign In',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: isLogin ? Colors.white : const Color(0xFF059669),
+                          color:
+                              isLogin ? Colors.white : const Color(0xFF059669),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -54,14 +59,17 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: !isLogin ? const Color(0xFF059669) : Colors.transparent,
+                        color: !isLogin
+                            ? const Color(0xFF059669)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         'Register',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: !isLogin ? Colors.white : const Color(0xFF059669),
+                          color:
+                              !isLogin ? Colors.white : const Color(0xFF059669),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -71,9 +79,9 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Form
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -158,14 +166,22 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> {
           isPassword: true,
         ),
         const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF059669),
-            foregroundColor: Colors.white,
-          ),
-          child: const Text('Register Driver'),
-        ),
+        // Find the login button and change onPressed:
+       ElevatedButton(
+  onPressed: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const DriverDashboardScreen(),
+      ),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFF059669),
+    foregroundColor: Colors.white,
+  ),
+  child: Text(AppLocalizations.of(context)!.signIn),  // Direct use
+),
       ],
     );
   }

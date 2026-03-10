@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../core/providers/app_provider.dart';
+import '../../patient/screens/patient_dashboard_screen.dart';
 
 class PatientAuthScreen extends StatefulWidget {
   const PatientAuthScreen({super.key});
@@ -186,10 +187,10 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
                 
                 const SizedBox(height: 32),
                 
-                // Form
+                // Form - Pass isArabic to both forms
                 AnimatedCrossFade(
-                  firstChild: _buildLoginForm(l10n),
-                  secondChild: _buildRegisterForm(l10n),
+                  firstChild: _buildLoginForm(l10n, isArabic),  // <-- Pass isArabic
+                  secondChild: _buildRegisterForm(l10n, isArabic),  // <-- Pass isArabic
                   crossFadeState: isLogin 
                     ? CrossFadeState.showFirst 
                     : CrossFadeState.showSecond,
@@ -247,7 +248,8 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
     );
   }
 
-  Widget _buildLoginForm(AppLocalizations l10n) {
+  // FIX: Add isArabic parameter
+  Widget _buildLoginForm(AppLocalizations l10n, bool isArabic) {
     return Column(
       children: [
         _buildTextField(
@@ -266,7 +268,7 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
         ),
         const SizedBox(height: 12),
         Align(
-          alignment: Alignment.centerRight,
+          alignment: isArabic ? Alignment.centerLeft : Alignment.centerRight,  // FIX: RTL alignment
           child: TextButton(
             onPressed: () {},
             child: Text(
@@ -277,7 +279,12 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
         ),
         const SizedBox(height: 24),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const PatientDashboardScreen()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFDC2626),
             foregroundColor: Colors.white,
@@ -288,7 +295,8 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
     );
   }
 
-  Widget _buildRegisterForm(AppLocalizations l10n) {
+  // FIX: Add isArabic parameter
+  Widget _buildRegisterForm(AppLocalizations l10n, bool isArabic) {
     return Column(
       children: [
         _buildTextField(
@@ -317,12 +325,17 @@ class _PatientAuthScreenState extends State<PatientAuthScreen> {
         ),
         const SizedBox(height: 24),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const PatientDashboardScreen()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFDC2626),
             foregroundColor: Colors.white,
           ),
-          child: Text(l10n.signUp),
+          child: Text(l10n.signUp),  // FIX: Use l10n.signUp instead of isArabic check
         ),
       ],
     );
