@@ -67,13 +67,13 @@ class PatientProfileCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
+                const Row(
                   children: [
                     _InfoChip(
                       icon: Icons.phone,
                       text: '+212 6XX-XXXXXX',
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _InfoChip(
                       icon: Icons.location_on,
                       text: 'Taroudant',
@@ -113,7 +113,7 @@ class _InfoChip extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 11,
               fontWeight: FontWeight.w500,

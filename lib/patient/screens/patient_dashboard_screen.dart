@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/app_provider.dart';
 import '../widgets/patient_profile_card.dart';
-import '../widgets/medical_advice_card.dart';
 import '../widgets/emergency_request_sheet.dart';
 
 class PatientDashboardScreen extends StatefulWidget {

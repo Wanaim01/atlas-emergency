@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/driver_dashboard_screen.dart';
+import '../../core/models/hospital_model.dart';
 
 class HospitalDetailsSheet extends StatelessWidget {
   final Hospital hospital;
@@ -83,12 +84,12 @@ class HospitalDetailsSheet extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               _StatCard(
-                icon: Icons.phone,
-                value: 'Call',
-                label: hospital.phone,
-                color: Colors.blue,
-                isPhone: true,
-              ),
+  icon: Icons.phone,
+  value: 'Call',
+  label: hospital.phone ?? 'N/A',
+  color: Colors.blue,
+  isPhone: true,
+),
             ],
           ),
           
